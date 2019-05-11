@@ -2,6 +2,10 @@
 var nombreUsuario = 'Eduardo Perez'
 var saldoCuenta = 3800
 var limiteExtraccion = 15000
+var costoAgua = 350
+var costoTelefono = 425
+var costoLuz = 210
+var costoInternet = 570
 
 
 //Ejecución de las funciones que actualizan los valores de las variables en el HTML.
@@ -21,6 +25,10 @@ function restarSaldo(dinero){
 	saldoCuenta -= dinero
 }
 
+function haySaldoDisponible(){
+	if (saldoCuenta>0)
+		return true
+}
 
 //Funciones que tenes que completar
 function cambiarLimiteDeExtraccion() {
@@ -31,24 +39,29 @@ function cambiarLimiteDeExtraccion() {
 }
 
 function extraerDinero() {
-	var dineroAExtraer = parseInt(prompt('Ingresar el monto a retirar'))
-	if(dineroAExtraer<=saldoCuenta){
-		if (dineroAExtraer<=limiteExtraccion){
-			if(true){ // Como el Home Banking maneja solo billetes de 100, verificar
-						// que el monto que se quiere extraer pueda ser entregado
-						// solo con esos billetes.
-				var saldoAnterior = saldoCuenta
-				restarSaldo(dineroAExtraer)
-				actualizarSaldoEnPantalla()
-				alert('Ha retirado: '+dineroAExtraer+'\n'+
-							'Saldo anterior: '+saldoAnterior+'\n'+
-							'Saldo actual: '+saldoCuenta)
+	if(haySaldoDisponible()){
+		var dineroAExtraer = parseInt(prompt('Ingresar el monto a retirar'))
+		if(dineroAExtraer<=saldoCuenta){
+			if (dineroAExtraer<=limiteExtraccion){
+				var resto = dineroAExtraer%100
+				if(resto==0){
+					var saldoAnterior = saldoCuenta
+					restarSaldo(dineroAExtraer)
+					actualizarSaldoEnPantalla()
+					alert('Ha retirado: '+dineroAExtraer+'\n'+
+								'Saldo anterior: '+saldoAnterior+'\n'+
+								'Saldo actual: '+saldoCuenta)
+				} else {
+					alert('Solo puedes extraer billetes de 100')
+				}
+			} else {
+				alert('La cantidad de dinero que deseas extraer es mayor a tu límite de extraccion')
 			}
 		} else {
-			alert('No puede extraer un monto mayor al limite de extraccion')
+			alert('No hay saldo disponible en tu cuenta para extraer esa cantidad de dinero')
 		}
 	} else {
-		alert('No puede extraer más del saldo disponible')
+		alert('No hay saldo disponible para realizar extracciones')
 	}
 }
 
@@ -63,7 +76,68 @@ function depositarDinero() {
 }
 
 function pagarServicio() {
+	var servicioAPagar = parseInt(prompt('Ingresa el número que corresponda con el servicio que quieres pagar:'+'\n'+
+																			 '1 - Agua'+'\n'+
+																			 '2 - Luz'+'\n'+
+																			 '3 - Internet'+'\n'+
+																			 '4 - Teléfono'+'\n'))
 
+	var saldoAnterior = saldoCuenta
+
+	switch(servicioAPagar){
+		case 1:
+			if(saldoCuenta>=costoAgua){
+				saldoCuenta-=costoAgua
+				alert('Ha pagado el servicio de agua'+'\n'+
+							'Saldo anterior: '+saldoAnterior+'\n'+
+							'Dinero descontadoo: '+costoAgua+'\n'+
+							'Saldo actual: '+saldoCuenta)
+			} else {
+				alert('No hay saldo suficiente para pagar el servicio')
+			}
+			break
+
+		case 2:
+			if(saldoCuenta>=costoLuz){
+				saldoCuenta-=costoLuz
+				alert('Ha pagado el servicio de luz'+'\n'+
+						'Saldo anterior: '+saldoAnterior+'\n'+
+						'Dinero descontadoo: '+costoLuz+'\n'+
+						'Saldo actual: '+saldoCuenta)
+			} else {
+				alert('No hay saldo suficiente para pagar el servicio')
+			}
+			break
+
+		case 3:
+			if(saldoCuenta>=costoInternet){
+				saldoCuenta-=costoInternet
+				alert('Ha pagado el servicio de internet'+'\n'+
+						'Saldo anterior: '+saldoAnterior+'\n'+
+						'Dinero descontadoo: '+costoInternet+'\n'+
+						'Saldo actual: '+saldoCuenta)
+			} else {
+				alert('No hay saldo suficiente para pagar el servicio')
+			}
+			break
+
+		case 4:
+			if(saldoCuenta>=costoTelefono){
+				saldoCuenta-=costoTelefono
+				alert('Ha pagado el servicio de teléfono'+'\n'+
+						'Saldo anterior: '+saldoAnterior+'\n'+
+						'Dinero descontadoo: '+costoTelefono+'\n'+
+						'Saldo actual: '+saldoCuenta)
+			} else {
+				alert('No hay saldo suficiente para pagar el servicio')
+			}
+			break
+
+		default:
+			alert('No existe el servicio que ha seleccionado')
+	}
+
+	actualizarSaldoEnPantalla()
 }
 
 function transferirDinero() {
